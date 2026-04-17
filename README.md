@@ -316,4 +316,4 @@ See CONTRIBUTING.md for guidelines.
 
 ---
 
-**Made with ❤️ to bridge the gap between Indians and government schemes**
+**Made with ❤️ by Ramharsh Sanjay Dandekar to bridge the gap between Indians and government schemes**
