@@ -303,17 +303,7 @@ Three main tables:
 - [ ] A/B testing framework
 
 ---
-
-## 📜 **License**
-
-MIT License - See LICENSE file
-
----
-
-## 🤝 **Contributing**
-
-See CONTRIBUTING.md for guidelines.
-
+this is the personal project. No open source Licence is there.
 ---
 
 **Made with ❤️ by Ramharsh Sanjay Dandekar to bridge the gap between Indians and government schemes**
