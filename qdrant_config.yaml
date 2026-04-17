@@ -1,0 +1,2 @@
+log_level: info
+api_key: "${QDRANT_API_KEY}"

@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # QDRANT VECTOR DATABASE
+  # ============================================
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: setu-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    environment:
+      QDRANT_API_KEY: ${QDRANT_API_KEY:-setu_qdrant_key}
+    volumes:
+      - qdrant_data:/qdrant/storage
+      - ./qdrant_config.yaml:/qdrant/config.yaml
+    networks:
+      - setu-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # ============================================
+  # PostgreSQL DATABASE
+  # ============================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: setu-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-setu_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-setu_password}
+      POSTGRES_DB: ${DB_NAME:-setu_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - setu-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-setu_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # PGADMIN (OPTIONAL - For Database Management)
+  # ============================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: setu-pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@setu.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      - setu-network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+volumes:
+  qdrant_data:
+    driver: local
+  postgres_data:
+    driver: local
+
+networks:
+  setu-network:
+    driver: bridge
